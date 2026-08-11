@@ -117,7 +117,7 @@ function LearnPage() {
               className="animate-rise surface-card p-5 text-left transition-all hover:-translate-y-0.5 hover:shadow-lifted"
             >
               <div className="flex items-start justify-between gap-2">
-                <span className="text-2xl">{article.emoji}</span>
+                <span className="text-2xl">{articleEmoji(article.category)}</span>
                 {isRead ? (
                   <Chip className="border-primary/30 bg-primary/10 text-primary">
                     <CircleCheck className="mr-1 h-3 w-3" /> Completed
@@ -127,9 +127,9 @@ function LearnPage() {
                 )}
               </div>
               <h2 className="mt-3 font-display text-base font-semibold">{article.title}</h2>
-              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{article.summary}</p>
+              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{article.excerpt}</p>
               <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                <Clock className="h-3 w-3" /> {article.read_minutes} min read · {article.category}
+                <Clock className="h-3 w-3" /> {article.reading_minutes} min read · {article.category}
               </p>
             </button>
           );
@@ -141,7 +141,7 @@ function LearnPage() {
           {open && (
             <>
               <DialogHeader>
-                <span className="text-3xl">{open.emoji}</span>
+                <span className="text-3xl">{articleEmoji(open.category)}</span>
                 <DialogTitle className="font-display text-lg">{open.title}</DialogTitle>
               </DialogHeader>
               <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{open.content}</p>
