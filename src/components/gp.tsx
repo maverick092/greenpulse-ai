@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatNumber } from "@/lib/greenpulse";
 
-export function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
+export function Counter({ value, suffix = "" }: { value: number; suffix?: string | undefined }) {
   const [display, setDisplay] = useState(0);
   const ref = useRef(0);
 
