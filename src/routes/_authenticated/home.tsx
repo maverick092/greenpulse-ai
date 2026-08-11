@@ -13,7 +13,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Chip, EmptyState, PageHeading, ScoreRing, StatCard } from "@/components/gp";
+import { Chip, EmptyState, ScoreRing, StatCard } from "@/components/gp";
 import { categoryIcon, categoryLabel, severityTone, STATUS_LABEL, statusTone } from "@/lib/greenpulse";
 
 export const Route = createFileRoute("/_authenticated/home")({
@@ -191,5 +191,3 @@ function HomePage() {
     </div>
   );
 }
-
-export { PageHeading };
