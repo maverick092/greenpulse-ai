@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedReportRouteImport } from './routes/_authenticated/report'
 import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports/index'
@@ -30,6 +32,16 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
   id: '/home',
@@ -57,6 +69,8 @@ const AuthenticatedReportsReportIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/home': typeof AuthenticatedHomeRoute
   '/report': typeof AuthenticatedReportRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -65,6 +79,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/home': typeof AuthenticatedHomeRoute
   '/report': typeof AuthenticatedReportRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -75,6 +91,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
+  '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/report': typeof AuthenticatedReportRoute
   '/_authenticated/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -83,14 +101,31 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/home' | '/report' | '/reports/$reportId' | '/reports/'
+    | '/'
+    | '/auth'
+    | '/analytics'
+    | '/assistant'
+    | '/home'
+    | '/report'
+    | '/reports/$reportId'
+    | '/reports/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/home' | '/report' | '/reports/$reportId' | '/reports'
+  to:
+    | '/'
+    | '/auth'
+    | '/analytics'
+    | '/assistant'
+    | '/home'
+    | '/report'
+    | '/reports/$reportId'
+    | '/reports'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/analytics'
+    | '/_authenticated/assistant'
     | '/_authenticated/home'
     | '/_authenticated/report'
     | '/_authenticated/reports/$reportId'
@@ -126,6 +161,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/analytics': {
+      id: '/_authenticated/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/assistant': {
+      id: '/_authenticated/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/home': {
       id: '/_authenticated/home'
       path: '/home'
@@ -158,6 +207,8 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
+  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedReportRoute: typeof AuthenticatedReportRoute
   AuthenticatedReportsReportIdRoute: typeof AuthenticatedReportsReportIdRoute
@@ -165,6 +216,8 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
+  AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedReportRoute: AuthenticatedReportRoute,
   AuthenticatedReportsReportIdRoute: AuthenticatedReportsReportIdRoute,
