@@ -36,7 +36,7 @@ function ProfilePage() {
       const { data: auth } = await supabase.auth.getUser();
       const [profileRes, badgesRes, earnedRes, reportsRes] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", auth.user!.id).maybeSingle(),
-        supabase.from("badges").select("*").order("threshold", { ascending: true }),
+        supabase.from("badges").select("*").order("sort_order", { ascending: true }),
         supabase.from("user_badges").select("badge_code, earned_at"),
         supabase.from("reports").select("status"),
       ]);
