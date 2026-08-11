@@ -26,12 +26,23 @@ export const Route = createFileRoute("/_authenticated/learn")({
 type Article = {
   id: string;
   title: string;
-  summary: string;
+  excerpt: string;
   content: string;
   category: string;
-  read_minutes: number;
-  emoji: string;
+  reading_minutes: number;
 };
+
+const CATEGORY_EMOJI: Record<string, string> = {
+  water: "💧",
+  waste: "♻️",
+  energy: "⚡",
+  climate: "🌍",
+  campus: "🏫",
+};
+
+function articleEmoji(category: string) {
+  return CATEGORY_EMOJI[category] ?? "🌱";
+}
 
 function LearnPage() {
   const queryClient = useQueryClient();
