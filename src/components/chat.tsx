@@ -64,10 +64,10 @@ export function Avatar({
   group,
 }: {
   name: string;
-  url?: string | null;
-  size?: number;
-  online?: boolean;
-  group?: boolean;
+  url?: string | null | undefined;
+  size?: number | undefined;
+  online?: boolean | undefined;
+  group?: boolean | undefined;
 }) {
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
