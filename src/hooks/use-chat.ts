@@ -15,7 +15,7 @@ export function useConversations() {
 
   useEffect(() => {
     const channel = supabase
-      .channel("chat-conversations")
+      .channel(`chat-conversations-${Math.random().toString(36).slice(2)}`)
       .on("postgres_changes", { event: "*", schema: "public", table: "messages" }, () => {
         queryClient.invalidateQueries({ queryKey: ["conversations"] });
       })

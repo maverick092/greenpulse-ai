@@ -236,7 +236,7 @@ export function ChatThread({
 
   useEffect(() => {
     const channel = supabase
-      .channel(`chat-thread-${conversation.id}`)
+      .channel(`chat-thread-${conversation.id}-${Math.random().toString(36).slice(2)}`)
       .on(
         "postgres_changes",
         {
