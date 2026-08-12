@@ -22,12 +22,12 @@ const publicFallbacks: Record<string, string> = {
   SUPABASE_PROJECT_ID: PUBLIC_SUPABASE_PROJECT_ID,
 };
 
-const define: Record<string, string> = {};
+// Seed missing values into process.env before Vite loads env. Vite serializes
+// VITE_* vars from process.env into import.meta.env (so both dot and bracket
+// access work), and server code reads process.env directly. No `define` keys
+// are needed, which avoids INVALID_DEFINE_CONFIG entirely.
 for (const [key, value] of Object.entries(publicFallbacks)) {
-  if (process.env[key]) continue;
-  const literal = JSON.stringify(value);
-  define[key.startsWith("VITE_") ? `import.meta.env.${key}` : `process.env.${key}`] = literal;
-  
+  if (!process.env[key]) process.env[key] = value;
 }
 
 export default defineConfig({
@@ -36,5 +36,5 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
-  vite: { define },
 });
+
