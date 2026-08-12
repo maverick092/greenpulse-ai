@@ -27,7 +27,7 @@ for (const [key, value] of Object.entries(publicFallbacks)) {
   if (process.env[key]) continue;
   const literal = JSON.stringify(value);
   define[key.startsWith("VITE_") ? `import.meta.env.${key}` : `process.env.${key}`] = literal;
-  if (!key.startsWith("VITE_")) define[`process.env['${key}']`] = literal;
+  
 }
 
 export default defineConfig({
