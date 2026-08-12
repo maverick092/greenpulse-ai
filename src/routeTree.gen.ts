@@ -16,6 +16,7 @@ import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedLearnRouteImport } from './routes/_authenticated/learn'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedReportRouteImport } from './routes/_authenticated/report'
 import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports/index'
@@ -55,6 +56,11 @@ const AuthenticatedLearnRoute = AuthenticatedLearnRouteImport.update({
   path: '/learn',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -85,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AuthenticatedAssistantRoute
   '/home': typeof AuthenticatedHomeRoute
   '/learn': typeof AuthenticatedLearnRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/report': typeof AuthenticatedReportRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/assistant': typeof AuthenticatedAssistantRoute
   '/home': typeof AuthenticatedHomeRoute
   '/learn': typeof AuthenticatedLearnRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/report': typeof AuthenticatedReportRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/learn': typeof AuthenticatedLearnRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/report': typeof AuthenticatedReportRoute
   '/_authenticated/reports/$reportId': typeof AuthenticatedReportsReportIdRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/home'
     | '/learn'
+    | '/messages'
     | '/profile'
     | '/report'
     | '/reports/$reportId'
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/home'
     | '/learn'
+    | '/messages'
     | '/profile'
     | '/report'
     | '/reports/$reportId'
@@ -150,6 +161,7 @@ export interface FileRouteTypes {
     | '/_authenticated/assistant'
     | '/_authenticated/home'
     | '/_authenticated/learn'
+    | '/_authenticated/messages'
     | '/_authenticated/profile'
     | '/_authenticated/report'
     | '/_authenticated/reports/$reportId'
@@ -213,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLearnRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -249,6 +268,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedLearnRoute: typeof AuthenticatedLearnRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedReportRoute: typeof AuthenticatedReportRoute
   AuthenticatedReportsReportIdRoute: typeof AuthenticatedReportsReportIdRoute
@@ -260,6 +280,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedLearnRoute: AuthenticatedLearnRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedReportRoute: AuthenticatedReportRoute,
   AuthenticatedReportsReportIdRoute: AuthenticatedReportsReportIdRoute,
@@ -277,13 +298,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

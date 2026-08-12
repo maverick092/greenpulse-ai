@@ -7,6 +7,7 @@ import {
   ChartPie,
   Bot,
   BookOpen,
+  MessageCircle,
   User,
   Bell,
   LogOut,
@@ -21,6 +22,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useUnreadTotal } from "@/hooks/use-chat";
 import type { ReactNode } from "react";
 
 const NAV = [
@@ -29,11 +31,12 @@ const NAV = [
   { to: "/reports", label: "My Reports", icon: ClipboardList },
   { to: "/analytics", label: "Analytics", icon: ChartPie },
   { to: "/assistant", label: "GreenBot", icon: Bot },
+  { to: "/messages", label: "Messages", icon: MessageCircle },
   { to: "/learn", label: "Learn", icon: BookOpen },
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
-const MOBILE_NAV = ["/home", "/report", "/reports", "/assistant", "/profile"];
+const MOBILE_NAV = ["/home", "/report", "/messages", "/assistant", "/profile"];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -67,6 +70,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   });
 
   const unread = (notifications ?? []).filter((n) => !n.read).length;
+  const unreadChats = useUnreadTotal();
 
   async function markAllRead() {
     await supabase.from("notifications").update({ read: true }).eq("read", false);
@@ -142,6 +146,18 @@ export function AppShell({ children }: { children: ReactNode }) {
               <span className="hidden items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-accent-foreground sm:inline-flex">
                 <Leaf className="h-3.5 w-3.5" /> {profile?.green_points ?? 0} pts
               </span>
+              <Link to="/messages" aria-label="Messages">
+                <Button variant="ghost" size="icon" className="relative rounded-full" asChild>
+                  <span>
+                    <MessageCircle className="h-5 w-5" />
+                    {unreadChats > 0 && (
+                      <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                        {unreadChats > 9 ? "9+" : unreadChats}
+                      </span>
+                    )}
+                  </span>
+                </Button>
+              </Link>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="ghost" size="icon" className="relative rounded-full">
