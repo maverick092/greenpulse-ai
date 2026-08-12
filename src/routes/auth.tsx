@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Leaf, Loader2 } from "lucide-react";
@@ -11,6 +11,18 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import logo from "@/assets/greenpulse-logo.png";
 
 export const Route = createFileRoute("/auth")({
+  // Session lives in localStorage, so this check must run on the client only.
+  ssr: false,
+  beforeLoad: async () => {
+    // Restore the persisted session BEFORE rendering the form so an already
+    // signed-in user is never shown the login screen (and never loops).
+    try {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) throw redirect({ to: "/home" });
+    } catch (error) {
+      if (error && typeof error === "object" && "to" in error) throw error;
+    }
+  },
   head: () => ({
     meta: [
       { title: "Sign in — GreenPulse AI" },
@@ -24,6 +36,7 @@ export const Route = createFileRoute("/auth")({
   }),
   component: AuthPage,
 });
+
 
 function AuthPage() {
   const navigate = useNavigate();
