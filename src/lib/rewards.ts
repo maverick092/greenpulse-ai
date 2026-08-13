@@ -1,23 +1,69 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export async function logActivity(action: string, points: number, metadata: Record<string, unknown> = {}) {
+/**
+ * Awards points for an action using the secure database rule table.
+ * The frontend never chooses the amount, and `dedupeKey` makes an award
+ * impossible to claim twice for the same thing.
+ */
+export async function awardPoints(
+  action: string,
+  dedupeKey: string | null = null,
+  metadata: Record<string, unknown> = {},
+): Promise<number> {
+  const { data, error } = await supabase.rpc("award_points", {
+    _action: action,
+    ...(dedupeKey ? { _dedupe_key: dedupeKey } : {}),
+    _metadata: metadata as never,
+  });
+  if (error) {
+    console.error("[rewards] award_points failed", error);
+    return 0;
+  }
+  const row = Array.isArray(data) ? data[0] : data;
+  return row?.awarded ?? 0;
+}
+
+export async function logActivity(action: string, _points = 0, metadata: Record<string, unknown> = {}) {
   const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return;
+  if (!auth.user) return 0;
+  const awarded = await awardPoints(action, (metadata['dedupe_key'] as string) ?? null, metadata);
   await supabase.from("activity_logs").insert({
     user_id: auth.user.id,
     action,
-    points,
+    points: awarded,
     metadata: metadata as never,
   });
+  return awarded;
+}
+
+/** Once-per-day login reward + streak bookkeeping. */
+export async function claimDailyLogin() {
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) return;
+  const today = new Date().toISOString().slice(0, 10);
+  const awarded = await awardPoints("daily_login", `daily_login:${today}`, { day: today });
+  if (awarded <= 0) return;
+
   const { data: profile } = await supabase
     .from("profiles")
-    .select("green_points")
+    .select("streak_days, best_streak, last_active_at")
     .eq("id", auth.user.id)
     .maybeSingle();
+
+  const last = profile?.last_active_at ? new Date(profile.last_active_at) : null;
+  const daysApart = last ? Math.floor((Date.now() - last.getTime()) / 86_400_000) : 99;
+  const streak = daysApart <= 1 ? (profile?.streak_days ?? 1) + 1 : 1;
+  const best = Math.max(profile?.best_streak ?? 1, streak);
+
   await supabase
     .from("profiles")
-    .update({ green_points: (profile?.green_points ?? 0) + points })
+    .update({ streak_days: streak, best_streak: best, last_active_at: new Date().toISOString() })
     .eq("id", auth.user.id);
+
+  if (streak > 0 && streak % 7 === 0) {
+    await awardPoints("streak_reward", `streak:${streak}`, { streak });
+    await notify("Streak reward", `${streak}-day contribution streak — bonus points added.`, "points");
+  }
 }
 
 export async function notify(title: string, message: string, type = "info") {
