@@ -186,6 +186,54 @@ export type Database = {
         }
         Relationships: []
       }
+      friend_requests: {
+        Row: {
+          addressee_id: string
+          created_at: string
+          id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string
+          id?: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string
+          id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      friends: {
+        Row: {
+          created_at: string
+          friend_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          friend_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          friend_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       learning_articles: {
         Row: {
           category: string
@@ -313,36 +361,99 @@ export type Database = {
         }
         Relationships: []
       }
+      point_rules: {
+        Row: {
+          action: string
+          label: string
+          points: number
+        }
+        Insert: {
+          action: string
+          label?: string
+          points: number
+        }
+        Update: {
+          action?: string
+          label?: string
+          points?: number
+        }
+        Relationships: []
+      }
+      points_transactions: {
+        Row: {
+          action: string
+          created_at: string
+          dedupe_key: string | null
+          id: string
+          label: string
+          metadata: Json
+          points: number
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          dedupe_key?: string | null
+          id?: string
+          label?: string
+          metadata?: Json
+          points: number
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          dedupe_key?: string | null
+          id?: string
+          label?: string
+          metadata?: Json
+          points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
+          best_streak: number
           college: string
           created_at: string
           full_name: string
           green_points: number
           id: string
+          last_active_at: string
+          reputation: number
           streak_days: number
           updated_at: string
+          username: string | null
         }
         Insert: {
           avatar_url?: string | null
+          best_streak?: number
           college?: string
           created_at?: string
           full_name?: string
           green_points?: number
           id: string
+          last_active_at?: string
+          reputation?: number
           streak_days?: number
           updated_at?: string
+          username?: string | null
         }
         Update: {
           avatar_url?: string | null
+          best_streak?: number
           college?: string
           created_at?: string
           full_name?: string
           green_points?: number
           id?: string
+          last_active_at?: string
+          reputation?: number
           streak_days?: number
           updated_at?: string
+          username?: string | null
         }
         Relationships: []
       }
@@ -453,6 +564,24 @@ export type Database = {
           },
         ]
       }
+      user_levels: {
+        Row: {
+          level: number
+          min_points: number
+          title: string
+        }
+        Insert: {
+          level: number
+          min_points: number
+          title: string
+        }
+        Update: {
+          level?: number
+          min_points?: number
+          title?: string
+        }
+        Relationships: []
+      }
       user_presence: {
         Row: {
           last_seen_at: string
@@ -473,10 +602,42 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_friend_request: {
+        Args: { _request_id: string }
+        Returns: undefined
+      }
+      award_points: {
+        Args: { _action: string; _dedupe_key?: string; _metadata?: Json }
+        Returns: {
+          awarded: number
+          total: number
+        }[]
+      }
+      get_leaderboard: {
+        Args: { _college?: string; _limit?: number; _since?: string }
+        Returns: {
+          avatar_url: string
+          badge_count: number
+          college: string
+          full_name: string
+          green_points: number
+          level: number
+          period_points: number
+          rank: number
+          reports_count: number
+          reputation: number
+          user_id: string
+          username: string
+        }[]
+      }
+      get_public_profile: { Args: { _user_id: string }; Returns: Json }
       is_conversation_member: {
         Args: { _conversation_id: string; _user_id: string }
         Returns: boolean
       }
+      level_for_points: { Args: { _points: number }; Returns: number }
+      mutual_friends_count: { Args: { _other_id: string }; Returns: number }
+      remove_friend: { Args: { _other_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
