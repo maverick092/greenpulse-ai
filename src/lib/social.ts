@@ -223,8 +223,8 @@ export async function fetchLeaderboard(scope: LeaderboardScope): Promise<Leaderb
   if (scope === "week") since = new Date(Date.now() - 7 * 86_400_000).toISOString();
 
   const { data, error } = await supabase.rpc("get_leaderboard", {
-    _college: college,
-    _since: since,
+    ...(college ? { _college: college } : {}),
+    ...(since ? { _since: since } : {}),
     _limit: 100,
   });
   if (error) throw error;
