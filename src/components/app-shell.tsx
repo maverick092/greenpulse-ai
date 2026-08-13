@@ -29,6 +29,8 @@ const NAV = [
   { to: "/home", label: "Home", icon: Home },
   { to: "/report", label: "Report", icon: CirclePlus },
   { to: "/reports", label: "My Reports", icon: ClipboardList },
+  { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
+  { to: "/friends", label: "Friends", icon: Users },
   { to: "/analytics", label: "Analytics", icon: ChartPie },
   { to: "/assistant", label: "GreenBot", icon: Bot },
   { to: "/messages", label: "Messages", icon: MessageCircle },
@@ -36,7 +38,7 @@ const NAV = [
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
-const MOBILE_NAV = ["/home", "/report", "/messages", "/assistant", "/profile"];
+const MOBILE_NAV = ["/home", "/report", "/leaderboard", "/friends", "/profile"];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
