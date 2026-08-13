@@ -41,14 +41,16 @@ export async function claimDailyLogin() {
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return;
   const today = new Date().toISOString().slice(0, 10);
-  const awarded = await awardPoints("daily_login", `daily_login:${today}`, { day: today });
-  if (awarded <= 0) return;
 
+  // Read the streak BEFORE awarding: award_points refreshes last_active_at.
   const { data: profile } = await supabase
     .from("profiles")
     .select("streak_days, best_streak, last_active_at")
     .eq("id", auth.user.id)
     .maybeSingle();
+
+  const awarded = await awardPoints("daily_login", `daily_login:${today}`, { day: today });
+  if (awarded <= 0) return;
 
   const last = profile?.last_active_at ? new Date(profile.last_active_at) : null;
   const daysApart = last ? Math.floor((Date.now() - last.getTime()) / 86_400_000) : 99;
