@@ -47,6 +47,19 @@ export function AppShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    let active = true;
+    claimDailyLogin()
+      .then(() => {
+        if (active) queryClient.invalidateQueries({ queryKey: ["profile"] });
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [queryClient]);
+
+
   const { data: profile } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
