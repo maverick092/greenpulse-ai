@@ -12,6 +12,8 @@ import {
   Bell,
   LogOut,
   Leaf,
+  Trophy,
+  Users,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/greenpulse-logo.png";
@@ -23,12 +25,17 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useUnreadTotal } from "@/hooks/use-chat";
+import { useEffect } from "react";
+import { claimDailyLogin } from "@/lib/rewards";
 import type { ReactNode } from "react";
+
 
 const NAV = [
   { to: "/home", label: "Home", icon: Home },
   { to: "/report", label: "Report", icon: CirclePlus },
   { to: "/reports", label: "My Reports", icon: ClipboardList },
+  { to: "/leaderboard", label: "Leaderboard", icon: Trophy },
+  { to: "/friends", label: "Friends", icon: Users },
   { to: "/analytics", label: "Analytics", icon: ChartPie },
   { to: "/assistant", label: "GreenBot", icon: Bot },
   { to: "/messages", label: "Messages", icon: MessageCircle },
@@ -36,12 +43,25 @@ const NAV = [
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
-const MOBILE_NAV = ["/home", "/report", "/messages", "/assistant", "/profile"];
+const MOBILE_NAV = ["/home", "/report", "/leaderboard", "/friends", "/profile"];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    let active = true;
+    claimDailyLogin()
+      .then(() => {
+        if (active) queryClient.invalidateQueries({ queryKey: ["profile"] });
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [queryClient]);
+
 
   const { data: profile } = useQuery({
     queryKey: ["profile"],

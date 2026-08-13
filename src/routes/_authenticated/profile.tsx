@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Chip, Counter, PageHeading } from "@/components/gp";
 import { cn } from "@/lib/utils";
+import { levelFor } from "@/lib/levels";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
@@ -88,8 +89,9 @@ function ProfilePage() {
   const points = profile?.green_points ?? 0;
   const earnedCodes = new Set((data?.earned ?? []).map((b) => b.badge_code));
   const resolved = (data?.reports ?? []).filter((r) => r.status === "resolved").length;
-  const level = Math.floor(points / 250) + 1;
-  const progress = ((points % 250) / 250) * 100;
+  const info = levelFor(points);
+  const level = info.level;
+  const progress = info.progress;
   const initials = (profile?.full_name ?? data?.email ?? "G").slice(0, 2).toUpperCase();
 
   return (
@@ -107,7 +109,7 @@ function ProfilePage() {
             <h2 className="truncate font-display text-xl font-bold">{profile?.full_name || "Green Student"}</h2>
             <p className="truncate text-sm opacity-80">{profile?.college || data?.email}</p>
             <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-2.5 py-0.5 text-[11px] font-semibold">
-              <Sparkles className="h-3 w-3" /> Level {level} Eco Champion
+              <Sparkles className="h-3 w-3" /> Level {level} · {info.title}
             </p>
           </div>
         </div>
@@ -121,7 +123,9 @@ function ProfilePage() {
         <div className="mt-5">
           <div className="flex justify-between text-[11px] font-medium opacity-80">
             <span>Level {level}</span>
-            <span>{250 - (points % 250)} pts to level {level + 1}</span>
+            <span>
+              {info.nextTitle ? `${info.pointsToNext} pts to ${info.nextTitle}` : "Max level reached"}
+            </span>
           </div>
           <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-primary-foreground/20">
             <div className="h-full rounded-full bg-primary-foreground transition-all" style={{ width: `${progress}%` }} />
