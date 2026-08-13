@@ -107,6 +107,7 @@ export async function syncBadges(): Promise<string[]> {
       .insert({ user_id: auth.user.id, badge_code: badge.code });
     if (!error) {
       newlyEarned.push(`${badge.emoji} ${badge.name}`);
+      await awardPoints("badge_unlocked", `badge:${badge.code}`, { badge: badge.code });
       await notify("New badge unlocked", `You earned the ${badge.name} badge.`, "badge");
     }
   }
