@@ -88,8 +88,9 @@ function ProfilePage() {
   const points = profile?.green_points ?? 0;
   const earnedCodes = new Set((data?.earned ?? []).map((b) => b.badge_code));
   const resolved = (data?.reports ?? []).filter((r) => r.status === "resolved").length;
-  const level = Math.floor(points / 250) + 1;
-  const progress = ((points % 250) / 250) * 100;
+  const info = levelFor(points);
+  const level = info.level;
+  const progress = info.progress;
   const initials = (profile?.full_name ?? data?.email ?? "G").slice(0, 2).toUpperCase();
 
   return (
