@@ -123,7 +123,9 @@ function ProfilePage() {
         <div className="mt-5">
           <div className="flex justify-between text-[11px] font-medium opacity-80">
             <span>Level {level}</span>
-            <span>{250 - (points % 250)} pts to level {level + 1}</span>
+            <span>
+              {info.nextTitle ? `${info.pointsToNext} pts to ${info.nextTitle}` : "Max level reached"}
+            </span>
           </div>
           <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-primary-foreground/20">
             <div className="h-full rounded-full bg-primary-foreground transition-all" style={{ width: `${progress}%` }} />
