@@ -25,7 +25,10 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useUnreadTotal } from "@/hooks/use-chat";
+import { useEffect } from "react";
+import { claimDailyLogin } from "@/lib/rewards";
 import type { ReactNode } from "react";
+
 
 const NAV = [
   { to: "/home", label: "Home", icon: Home },
