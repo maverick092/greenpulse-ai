@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Chip, Counter, PageHeading } from "@/components/gp";
 import { cn } from "@/lib/utils";
+import { levelFor } from "@/lib/levels";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
