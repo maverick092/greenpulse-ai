@@ -109,7 +109,7 @@ function ProfilePage() {
             <h2 className="truncate font-display text-xl font-bold">{profile?.full_name || "Green Student"}</h2>
             <p className="truncate text-sm opacity-80">{profile?.college || data?.email}</p>
             <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-2.5 py-0.5 text-[11px] font-semibold">
-              <Sparkles className="h-3 w-3" /> Level {level} Eco Champion
+              <Sparkles className="h-3 w-3" /> Level {level} · {info.title}
             </p>
           </div>
         </div>
