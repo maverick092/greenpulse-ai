@@ -156,7 +156,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl lg:px-8">
             <Link to="/home" className="flex items-center gap-2 lg:hidden">
               <img src={logo} alt="GreenPulse AI" width={30} height={30} className="h-7.5 w-7.5" />
-              <span className="font-display text-base font-bold">GreenPulse AI</span>
+              <span className="font-display text-base font-bold text-chocolate">GreenPulse AI</span>
             </Link>
             <p className="hidden text-sm text-muted-foreground lg:block">
               Welcome back{profile?.full_name ? `, ${profile.full_name.split(" ")[0]}` : ""} 👋
