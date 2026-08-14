@@ -43,7 +43,7 @@ const NAV = [
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
-const MOBILE_NAV = ["/home", "/report", "/leaderboard", "/friends", "/profile"];
+const MOBILE_NAV = ["/home", "/leaderboard", "/report", "/friends", "/profile"];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -114,7 +114,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link to="/home" className="flex items-center gap-2.5">
             <img src={logo} alt="GreenPulse AI" width={36} height={36} className="h-9 w-9" />
             <div>
-              <p className="font-display text-base font-bold leading-none text-foreground">GreenPulse AI</p>
+              <p className="font-display text-base font-bold leading-none text-chocolate">GreenPulse AI</p>
               <p className="mt-1 text-[11px] text-muted-foreground">Smart Campus. Green Future.</p>
             </div>
           </Link>
@@ -156,7 +156,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border/60 bg-background/70 px-4 py-3 backdrop-blur-xl lg:px-8">
             <Link to="/home" className="flex items-center gap-2 lg:hidden">
               <img src={logo} alt="GreenPulse AI" width={30} height={30} className="h-7.5 w-7.5" />
-              <span className="font-display text-base font-bold">GreenPulse AI</span>
+              <span className="font-display text-base font-bold text-chocolate">GreenPulse AI</span>
             </Link>
             <p className="hidden text-sm text-muted-foreground lg:block">
               Welcome back{profile?.full_name ? `, ${profile.full_name.split(" ")[0]}` : ""} 👋
@@ -226,7 +226,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/60 bg-background/85 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur-xl lg:hidden">
         <div className="mx-auto flex max-w-md items-end justify-between">
-          {NAV.filter((item) => MOBILE_NAV.includes(item.to)).map((item) => {
+          {MOBILE_NAV.map((to) => {
+            const item = NAV.find((n) => n.to === to)!;
             const active = isActive(item.to);
             const primary = item.to === "/report";
             return (
@@ -240,15 +241,15 @@ export function AppShell({ children }: { children: ReactNode }) {
               >
                 <span
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-full transition-all",
+                    "flex items-center justify-center rounded-full transition-all",
                     primary
-                      ? "bg-gradient-primary text-primary-foreground shadow-glow"
+                      ? "h-11 w-11 -translate-y-2.5 bg-gradient-primary text-primary-foreground shadow-glow"
                       : active
-                        ? "bg-accent text-accent-foreground"
-                        : "",
+                        ? "h-9 w-9 bg-accent text-accent-foreground"
+                        : "h-9 w-9 text-chocolate",
                   )}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className={cn("transition-all", primary ? "h-6 w-6" : "h-5 w-5")} />
                 </span>
                 {item.label}
               </Link>
