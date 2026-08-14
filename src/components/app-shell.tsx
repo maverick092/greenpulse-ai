@@ -114,7 +114,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link to="/home" className="flex items-center gap-2.5">
             <img src={logo} alt="GreenPulse AI" width={36} height={36} className="h-9 w-9" />
             <div>
-              <p className="font-display text-base font-bold leading-none text-foreground">GreenPulse AI</p>
+              <p className="font-display text-base font-bold leading-none text-chocolate">GreenPulse AI</p>
               <p className="mt-1 text-[11px] text-muted-foreground">Smart Campus. Green Future.</p>
             </div>
           </Link>
