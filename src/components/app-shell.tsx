@@ -240,15 +240,15 @@ export function AppShell({ children }: { children: ReactNode }) {
               >
                 <span
                   className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-full transition-all",
+                    "flex items-center justify-center rounded-full transition-all",
                     primary
-                      ? "bg-gradient-primary text-primary-foreground shadow-glow"
+                      ? "h-11 w-11 -translate-y-2.5 bg-gradient-primary text-primary-foreground shadow-glow"
                       : active
-                        ? "bg-accent text-accent-foreground"
-                        : "",
+                        ? "h-9 w-9 bg-accent text-accent-foreground"
+                        : "h-9 w-9 text-chocolate",
                   )}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className={cn("transition-all", primary ? "h-6 w-6" : "h-5 w-5")} />
                 </span>
                 {item.label}
               </Link>
