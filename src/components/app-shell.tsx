@@ -226,7 +226,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/60 bg-background/85 px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur-xl lg:hidden">
         <div className="mx-auto flex max-w-md items-end justify-between">
-          {NAV.filter((item) => MOBILE_NAV.includes(item.to)).map((item) => {
+          {MOBILE_NAV.map((to) => {
+            const item = NAV.find((n) => n.to === to)!;
             const active = isActive(item.to);
             const primary = item.to === "/report";
             return (
