@@ -43,7 +43,7 @@ const NAV = [
   { to: "/profile", label: "Profile", icon: User },
 ] as const;
 
-const MOBILE_NAV = ["/home", "/report", "/leaderboard", "/friends", "/profile"];
+const MOBILE_NAV = ["/home", "/leaderboard", "/report", "/friends", "/profile"];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
